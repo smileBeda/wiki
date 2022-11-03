@@ -15,8 +15,7 @@ case "$os" in
 		ver=$(sw_vers -productversion | cut -d "." -f 1)
 		if [[ ${ver} < 12 ]]
 		then
-			echo -e "\nThis script is compatible only with macOS Monterey or later. Please upgrade your macOS."
-			exit 1
+			echo -e "\nBluetooth firmware with this script is compatible only with macOS Monterey or later. Please upgrade your macOS if you have bcm4377 wifi/bt chip, otherwise this won't be an issue."
 		fi
 		echo "Mounting the EFI partition"
 		sudo diskutil mount disk0s1
@@ -73,10 +72,10 @@ case "$os" in
 		else
 			sudo tar xf /tmp/apple-wifi-fw/firmware.tar
 		fi
-		sudo modprobe -r brcmfmac
-		sudo modprobe brcmfmac
-		sudo modprobe -r hci_bcm4377
-		sudo modprobe hci_bcm4377
+		sudo modprobe -r brcmfmac ||:
+		sudo modprobe brcmfmac 
+		sudo modprobe -r hci_bcm4377 ||: 
+		sudo modprobe hci_bcm4377||:
 		echo "Cleaning up"
 		sudo rm -r /tmp/apple-wifi-fw
 		echo "Keeping a copy of the firmware and the script in the EFI partition shall allow you to set up Wi-Fi again in the future by running this script or the commands told in the macOS step in Linux only, without the macOS step. Do you want to keep a copy? (y/N)"
@@ -417,6 +416,7 @@ class FWPackage(object):
 pkg = FWPackage("firmware.tar")
 col = WiFiFWCollection(sys.argv[1]+"/wifi")
 pkg.add_files(sorted(col.files()))
-col = BluetoothFWCollection(sys.argv[1]+"/bluetooth")
-pkg.add_files(sorted(col.files()))
+print("Skipping bluetooth")
+#col = BluetoothFWCollection(sys.argv[1]+"/bluetooth")
+#pkg.add_files(sorted(col.files()))
 pkg.close()
