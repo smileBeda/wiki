@@ -12,11 +12,7 @@ os=$(uname -s)
 case "$os" in
 	(Darwin)
 		echo "Detected macOS"
-		ver=$(sw_vers -productversion | cut -d "." -f 1)
-		if [[ ${ver} < 12 ]]
-		then
-			echo -e "\nBluetooth firmware with this script is compatible only with macOS Monterey or later. Please upgrade your macOS if you have bcm4377 wifi/bt chip, otherwise this won't be an issue."
-		fi
+		
 		echo "Mounting the EFI partition"
 		sudo diskutil mount disk0s1
 		echo "Getting Wi-Fi and Bluetooth firmware"
