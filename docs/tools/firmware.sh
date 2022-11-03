@@ -413,6 +413,9 @@ pkg = FWPackage("firmware.tar")
 col = WiFiFWCollection(sys.argv[1]+"/wifi")
 pkg.add_files(sorted(col.files()))
 print("Skipping bluetooth")
-#col = BluetoothFWCollection(sys.argv[1]+"/bluetooth")
-#pkg.add_files(sorted(col.files()))
+try:
+	col = BluetoothFWCollection(sys.argv[1]+"/bluetooth")
+	pkg.add_files(sorted(col.files()))
+except:
+	print("Couldn't get Bluetooth firmware. This only matters for brcm4377 chip")
 pkg.close()
